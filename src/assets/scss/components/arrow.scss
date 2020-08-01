@@ -1,0 +1,51 @@
+.arrow {
+    height: 50px;
+    transform: rotate(180deg);
+    //todo animation not working
+    animation: bouncy-top 6s 0s infinite linear;
+
+    svg {
+        height: 100%;
+        width: 100%;
+
+        g {
+            fill: $grey;
+            fill-opacity: 60%;
+            filter: none;
+            stroke: $white;
+            stroke-opacity: 60%;
+            stroke-width: 0.25px;
+            transition: fill, filter;
+        }
+    }
+}
+
+@keyframes bouncy-top {
+    0% {
+        top: 0
+    }
+
+    40% {
+        top: 0
+    }
+
+    43% {
+        top: -0.9em
+    }
+
+    46% {
+        top: 0
+    }
+
+    48% {
+        top: -0.4em
+    }
+
+    50% {
+        top: 0
+    }
+
+    100% {
+        top: 0
+    }
+}
