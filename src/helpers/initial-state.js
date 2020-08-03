@@ -1,9 +1,30 @@
+const inputs = [
+    'doc',
+    'epub',
+    'pdf',
+    'csv',
+]
 const initialState = {
     app: {
-        debug: false,
-        loading: true,
         menuOpen: false
+    },
+    home: {
+        selectedInput: 'doc',
+        inputs,
+        outputs: inputs.reduce((acc, input) => {
+            acc[input] = {
+                outputs: []
+            }
+            return acc
+        }, {}),
+    },
+    settings: {
+        user: {}
+    },
+    history: {
+        items: []
     }
+
 }
 
 export default initialState
