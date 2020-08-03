@@ -23,8 +23,10 @@ const initialState = {
     },
     history: {
         items: []
-    }
+    },
+    api: {
 
+    }
 }
 
 export default initialState
