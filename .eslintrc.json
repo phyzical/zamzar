@@ -1,0 +1,8 @@
+// .eslintrc.json
+{
+    "extends": "erb",
+    "plugins": [],
+    "env": {
+        "node": true
+    }
+}
