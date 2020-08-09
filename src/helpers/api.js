@@ -1,5 +1,8 @@
 import FakeAPI from './apis/FakeAPI';
 import RealAPI from './apis/RealAPI';
+import {
+  getDispatch,
+} from './store';
 
 const fakeData = true;
 const getAPI = fakeData ? FakeAPI : RealAPI;
@@ -7,7 +10,15 @@ const getAPI = fakeData ? FakeAPI : RealAPI;
 // Accounts
 // todo add dispatches for requests
 export function getAccount() {
-  return getAPI.getAccount();
+  const dispatch = getDispatch();
+  dispatch({
+    type: '',
+  });
+  return new Promise((resolve) => {
+    getAPI.getAccount().then((data) => {
+      resolve();
+    });
+  });
 }
 
 // Formats

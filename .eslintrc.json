@@ -19,6 +19,9 @@
     "react/prefer-stateless-function": "off",
     "react/no-array-index-key": "off",
     "operator-linebreak": "off",
-    "import/prefer-default-export": "off"
+    "import/prefer-default-export": "off",
+    "newline-per-chained-call": ["error", {
+      "ignoreChainWithDepth": 1
+    }]
   }
 }

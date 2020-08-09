@@ -9,17 +9,24 @@ import {
 import camelcaseKeys from 'camelcase-keys';
 
 async function FAKE(data, status = 200) {
-  return {
-    status,
-    body: camelcaseKeys(data, {
-      deep: true,
-    }),
-  };
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        status,
+        body: camelcaseKeys(data, {
+          deep: true,
+        }),
+      });
+    }, 1000);
+  });
 }
 
 const randomRange = (min, max) => _range(_random(min, max));
-const randomKey = () => Math.random().toString(36).substring(10);
-const randomDate = () => (new Date()).toString();
+const randomKey = () => Math.random()
+  .toString(36)
+  .substring(10);
+const randomDate = () => (new Date())
+  .toString();
 
 // account
 const accountResponse = {
@@ -52,10 +59,11 @@ const formats = [
 const randomFormat = () => _sample(formats);
 
 const getFormatResponse = (format) => {
-  const targets = randomRange(1, 5).map(() => ({
-    name: randomFormat(),
-    credit_cost: _random(1, 3),
-  }));
+  const targets = randomRange(1, 5)
+    .map(() => ({
+      name: randomFormat(),
+      credit_cost: _random(1, 3),
+    }));
 
   return {
     name: format,
@@ -66,16 +74,18 @@ export function getFormat(format) {
   return FAKE(getFormatResponse(format));
 }
 const getFormatsResponse = () => {
-  const data = randomRange(1, 50).map(() => {
-    const targets = randomRange(1, 5).map(() => ({
-      name: randomFormat(),
-      credit_cost: _random(1, 3),
-    }));
-    return {
-      name: randomFormat(),
-      targets,
-    };
-  });
+  const data = randomRange(1, 50)
+    .map(() => {
+      const targets = randomRange(1, 5)
+        .map(() => ({
+          name: randomFormat(),
+          credit_cost: _random(1, 3),
+        }));
+      return {
+        name: randomFormat(),
+        targets,
+      };
+    });
   return {
     data,
     paging: {
@@ -118,7 +128,8 @@ export function checkFile(jobID) {
 }
 
 const checkFilesResponse = () => {
-  const data = randomRange(1, 50).map(generateFileResponse());
+  const data = randomRange(1, 50)
+    .map(generateFileResponse());
   return {
     data,
     paging: {
@@ -187,7 +198,8 @@ export function checkImport(importID) {
   return FAKE(checkImportResponse(importID));
 }
 const checkImportsResponse = () => {
-  const data = randomRange(1, 50).map(generateCheckImportResponse());
+  const data = randomRange(1, 50)
+    .map(generateCheckImportResponse());
   return {
     data,
     paging: {
@@ -264,7 +276,8 @@ export function cancelJob(jobID) {
   return FAKE(cancelJobResponse(jobID));
 }
 const getJobsResponse = () => {
-  const data = randomRange(1, 50).map(generateCheckImportResponse());
+  const data = randomRange(1, 50)
+    .map(generateCheckImportResponse());
   return {
     data,
     paging: {

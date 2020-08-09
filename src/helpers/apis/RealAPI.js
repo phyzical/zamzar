@@ -35,27 +35,30 @@ function performFetch(url, method, body) {
 }
 
 function handleResponse(url, response, resolve, reject) {
-  return response.json().then((parsedResponse) => {
-    log(`before processing ${url}`, parsedResponse, response.status);
-    checkResponseForErrors(parsedResponse, response.status);
-    resolve({
-      body: camelcaseKeys(parsedResponse.data),
-      status: response.status,
+  return response.json()
+    .then((parsedResponse) => {
+      log(`before processing ${url}`, parsedResponse, response.status);
+      checkResponseForErrors(parsedResponse, response.status);
+      resolve({
+        body: camelcaseKeys(parsedResponse.data),
+        status: response.status,
+      });
+    })
+    .catch((error) => {
+      reject({
+        status: error.status,
+        body: {
+          message: error.message,
+        },
+      });
     });
-  }).catch((error) => {
-    reject({
-      status: error.status,
-      body: {
-        message: error.message,
-      },
-    });
-  });
 }
 
 function request(method, url, body) {
   return new Promise((resolve, reject) => {
     performFetch(url, method, body)
-      .then((resp) => handleResponse(url, resp, resolve, reject)).catch((
+      .then((resp) => handleResponse(url, resp, resolve, reject))
+      .catch((
         error
       ) => reject(RequestError(error, 500)));
   });
@@ -66,8 +69,10 @@ export function GET(url, params) {
   let finalURL = url;
   let finalParams = params;
   if (finalParams) {
-    finalParams = Object.keys(finalParams).reduce((acc, val) => `${acc}&${val}=${encodeURIComponent(finalParams[val])}`,
-      '').substr(1);
+    finalParams = Object.keys(finalParams)
+      .reduce((acc, val) => `${acc}&${val}=${encodeURIComponent(finalParams[val])}`,
+        '')
+      .substr(1);
     finalURL = `${finalURL}?${finalParams}`;
   }
   return request('GET', finalURL, null);

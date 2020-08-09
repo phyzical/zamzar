@@ -41,6 +41,6 @@ export function getStore() {
   return store;
 }
 
-store = getStore();
-
-export default store;
+export function getDispatch() {
+  return getStore().dispatch;
+}
