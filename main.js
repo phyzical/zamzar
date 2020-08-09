@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 // Import parts of electron to use
 const {
   app,
@@ -58,6 +59,7 @@ function createWindow() {
       const {
         default: installExtension,
         REACT_DEVELOPER_TOOLS,
+        // eslint-disable-next-line global-require
       } = require('electron-devtools-installer');
 
       installExtension(REACT_DEVELOPER_TOOLS)

@@ -11,7 +11,6 @@ import store from './helpers/store';
 
 uikit.use(require('uikit/dist/js/uikit-icons'));
 
-// Since we are using HtmlWebpackPlugin WITHOUT a template, we should create our own root node in the body element before rendering into it
 const root = document.createElement('div');
 
 root.id = 'root';

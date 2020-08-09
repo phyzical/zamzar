@@ -4,6 +4,7 @@ import {
 } from 'redux';
 import {
   createLogger,
+  // eslint-disable-next-line import/no-extraneous-dependencies
 } from 'redux-logger';
 
 import reducers from '../reducers';
@@ -15,11 +16,10 @@ const logger = createLogger({
   predicate: () => isDev,
 });
 
+// eslint-disable-next-line import/no-mutable-exports
 let store;
 
-const storeMiddleware = (store) => (next) => (action) =>
-  // continue processing this action
-  next(action);
+const storeMiddleware = () => (next) => (action) => next(action);
 export function getStore() {
   if (!store) {
     if (

@@ -17,6 +17,10 @@ async function FAKE(data, status = 200) {
   };
 }
 
+const randomRange = (min, max) => _range(_random(min, max));
+const randomKey = () => Math.random().toString(36).substring(10);
+const randomDate = () => (new Date()).toString();
+
 // account
 const accountResponse = {
   test_credits_remaining: _random(1, 40),
@@ -45,11 +49,11 @@ const formats = [
   'xls',
 ];
 
-const randomRange = (min, max) => _range(_random(min, max));
+const randomFormat = () => _sample(formats);
 
 const getFormatResponse = (format) => {
   const targets = randomRange(1, 5).map(() => ({
-    name: _sample(formats),
+    name: randomFormat(),
     credit_cost: _random(1, 3),
   }));
 
@@ -64,11 +68,11 @@ export function getFormat(format) {
 const getFormatsResponse = () => {
   const data = randomRange(1, 50).map(() => {
     const targets = randomRange(1, 5).map(() => ({
-      name: _sample(formats),
+      name: randomFormat(),
       credit_cost: _random(1, 3),
     }));
     return {
-      name: _sample(formats),
+      name: randomFormat(),
       targets,
     };
   });
@@ -88,57 +92,45 @@ export function getFormats() {
 }
 // files
 
-const uploadFileResponse = (fileName) => ({
-  id: _random(1, 5000),
-  key: 'GiVUYsF4A8ssq93FR48H',
-  name: fileName,
-  size: _random(1, 5000),
-  format: _last(fileName.split('.')),
-  created_at: (new Date()).toString(),
-});
-export function uploadFile(fileName, fileData) {
+const generateFileResponse = (jobID, fileName) => {
+  const finalJobID = jobID || _random(1, 5000);
+  const finalFileName = fileName || `${randomKey()}.${randomFormat()}`;
+  return {
+    id: finalJobID,
+    key: randomKey(),
+    name: finalFileName,
+    size: _random(1, 5000),
+    format: _last(finalFileName.split('.')),
+    created_at: randomDate(),
+  };
+};
+
+const uploadFileResponse = (fileName) => generateFileResponse(null, fileName);
+
+export function uploadFile(fileName) {
   return FAKE(uploadFileResponse(fileName));
 }
 
-const checkFileResponse = {
-  id: 3,
-  key: 'GiVUYsF4A8ssq93FR48H',
-  name: 'budget.xls',
-  size: 16519,
-  format: 'xls',
-  created_at: '2013-10-27T13:41:00Z',
-};
+const checkFileResponse = (jobID) => generateFileResponse(jobID);
+
 export function checkFile(jobID) {
-  return FAKE(checkFileResponse);
+  return FAKE(checkFileResponse(jobID));
 }
 
-const checkFilesResponse = {
-  data: [{
-      id: 5,
-      key: 'GiVUYsF4A8ssq93FR48H',
-      name: 'budget.xls.numbers',
-      size: 18533,
-      format: 'numbers',
-      created_at: '2013-10-27T13:41:00Z',
+const checkFilesResponse = () => {
+  const data = randomRange(1, 50).map(generateFileResponse());
+  return {
+    data,
+    paging: {
+      total_count: _size(data),
+      first: _first(data).id,
+      last: _last(data).id,
+      limit: 50,
     },
-    {
-      id: 3,
-      key: 'GiVUYsF4A8ssq93FR48H',
-      name: 'budget.xls',
-      size: 16519,
-      format: 'xls',
-      created_at: '2013-10-27T13:41:00Z',
-    },
-  ],
-  paging: {
-    total_count: 2,
-    first: 5,
-    last: 3,
-    limit: 50,
-  },
+  };
 };
-export function checkFiles(jobID) {
-  return FAKE(checkFilesResponse);
+export function checkFiles() {
+  return FAKE(checkFilesResponse());
 }
 
 // todo get a sample payload
@@ -147,203 +139,142 @@ export function getFile(jobID) {
   return FAKE(getFileResponse);
 }
 
-const deleteFileResponse = {
-  id: 3,
-  key: 'GiVUYsF4A8ssq93FR48H',
-  name: 'budget.xls',
-  size: 16519,
-  format: 'xls',
-  created_at: '2013-10-27T13:41:00Z',
-};
-export function deleteFile(jobID) {
-  return FAKE(deleteFileResponse);
-}
-// imports
+const deleteFileResponse = (jobID) => generateFileResponse(jobID);
 
-const importFileResponse = {
-  id: 1,
-  key: 'GiVUYsF4A8ssq93FR48H',
-  url: 'https://www.example.com/logo.png',
+export function deleteFile(jobID) {
+  return FAKE(deleteFileResponse(jobID));
+}
+
+// imports
+const importFileResponse = (fileURL) => ({
+  id: _random(1, 5000),
+  key: randomKey(),
+  url: fileURL,
   status: 'initialising',
-  created_at: '2013-10-27T13:41:00Z',
+  created_at: randomDate(),
   finished_at: null,
-};
-export function importFile(fileURL, fileName) {
-  return FAKE(importFileResponse);
+});
+
+export function importFile(fileURL) {
+  return FAKE(importFileResponse(fileURL));
 }
-const checkImportResponse = {
-  id: 1,
-  key: 'GiVUYsF4A8ssq93FR48H',
-  url: 'https://www.example.com/logo.png',
-  status: 'successful',
-  file: {
-    id: 42,
-    name: 'logo.png',
-    size: 47577,
-    format: 'png',
-  },
+
+const generateCheckImportResponse = (importID) => {
+  const status = _sample(['successful', 'failed']);
+  const ext = randomFormat();
+  const filename = `${randomKey()}.${ext}`;
+  const additionalResponses = status === 'failed' ? {
+    code: _random(1, 50),
+    message: `generic error message ${randomKey()}`,
+  } : {
+    id: _random(1, 50),
+    name: filename,
+    size: _random(1, 50000),
+    format: ext,
+  };
+  return {
+    id: importID || _random(1, 5000),
+    key: randomKey(),
+    url: `https://www.example.com/${filename}`,
+    status,
+    ...additionalResponses,
+  };
 };
+
+const checkImportResponse = (importID) => generateCheckImportResponse(importID);
+
 export function checkImport(importID) {
-  return FAKE(checkImportResponse);
+  return FAKE(checkImportResponse(importID));
 }
-const checkImportsResponse = {
-  data: [{
-      id: 2,
-      key: 'GiVUYsF4A8ssq93FR48H',
-      url: 'https://www.example.com/huge.zip',
-      status: 'failed',
-      failure: {
-        code: 3,
-        message: 'The size of the imported file (1.2 GB) exceeds the maximum file size cap for the current plan (1 GB).',
-      },
+const checkImportsResponse = () => {
+  const data = randomRange(1, 50).map(generateCheckImportResponse());
+  return {
+    data,
+    paging: {
+      total_count: _size(data),
+      first: _first(data).id,
+      last: _last(data).id,
+      limit: 50,
     },
-    {
-      id: 1,
-      key: 'GiVUYsF4A8ssq93FR48H',
-      url: 'https://www.example.com/logo.png',
-      status: 'successful',
-      file: {
-        id: 42,
-        name: 'logo.png',
-        size: 47577,
-        format: 'png',
-      },
-    },
-  ],
-  paging: {
-    total_count: 2,
-    first: 2,
-    last: 1,
-    limit: 50,
-  },
+  };
 };
+
 export function checkImports() {
-  return FAKE(checkImportsResponse);
+  return FAKE(checkImportsResponse());
 }
 // jobs
-const createJobResponse = {
-  id: 15,
-  key: 'GiVUYsF4A8ssq93FR48H',
+const createJobResponse = (sourceFile, targetFormat) => ({
+  id: _random(1, 5000),
+  key: randomKey(),
   status: 'initialising',
-  sandbox: true,
-  created_at: '2013-10-27T13:41:00Z',
+  created_at: randomDate(),
   finished_at: null,
   source_file: {
-    id: 2,
-    name: 'portrait.gif',
-    size: 90571,
+    id: _random(1, 5000),
+    name: sourceFile,
+    size: _random(1, 50000),
   },
   target_files: [],
-  target_format: 'png',
-  credit_cost: 1,
-};
+  target_format: targetFormat,
+  credit_cost: _random(1, 3),
+});
 export function createJob(sourceFile, targetFormat) {
-  return FAKE(createJobResponse);
+  return FAKE(createJobResponse(sourceFile, targetFormat));
 }
 
-const getJobResponse = {
-  id: 15,
-  key: 'GiVUYsF4A8ssq93FR48H',
-  status: 'successful',
-  sandbox: true,
-  created_at: '2013-10-27T13:41:00Z',
-  finished_at: '2013-10-27T13:41:13Z',
-  source_file: {
-    id: 2,
-    name: 'portrait.gif',
-    size: 90571,
-  },
-  target_files: [{
-    id: 3,
-    name: 'portrait.png',
-    size: 15311,
-  }],
-  target_format: 'png',
-  credit_cost: 1,
+const generateJobResponse = (jobID) => {
+  const status = _sample(['successful', 'initialising', 'cancelled']);
+  const ext = randomFormat();
+  const filename = randomKey();
+  const newExt = randomFormat();
+
+  const targetFiles = status === 'successful' ? [{
+    id: _random(1, 5000),
+    name: `${filename}.${newExt}`,
+    size: _random(1, 50000),
+  }] : [];
+  return {
+    id: jobID || _random(1, 5000),
+    key: randomKey(),
+    status,
+    created_at: randomDate(),
+    finished_at: null,
+    source_file: {
+      id: _random(1, 5000),
+      name: `${filename}.${ext}`,
+      size: _random(1, 50000),
+    },
+    target_files: targetFiles,
+    target_format: newExt,
+    credit_cost: _random(1, 3),
+  };
 };
+
+const getJobResponse = (jobID) => generateJobResponse(jobID);
 export function getJob(jobID) {
-  return FAKE(getJobResponse);
+  return FAKE(getJobResponse(jobID));
 }
-const cancelJobResponse = {
-  id: 1,
-  key: 'GiVUYsF4A8ssq93FR48H',
-  status: 'cancelled',
-  sandbox: false,
-  created_at: '2013-10-27T13:41:00Z',
-  finished_at: null,
-  source_file: {
-    id: 1,
-    name: 'budget.xls',
-    size: 16519,
-  },
-  target_files: [],
-  target_format: 'xlsx',
-  credit_cost: 1,
+const cancelJobResponse = (jobID) => {
+  const result = generateJobResponse(jobID);
+  result.status = 'cancelled';
+  result.target_files = [];
+  return result;
 };
 export function cancelJob(jobID) {
-  return FAKE(cancelJobResponse);
+  return FAKE(cancelJobResponse(jobID));
 }
-const getJobsResponse = {
-  data: [{
-      id: 18,
-      key: 'GiVUYsF4A8ssq93FR48H',
-      status: 'successful',
-      sandbox: false,
-      created_at: '2013-10-27T13:41:00Z',
-      finished_at: '2013-10-27T13:41:13Z',
-      source_file: {
-        id: 3,
-        name: 'invitations.doc',
-        size: 38301,
-      },
-      target_files: [{
-        id: 14,
-        name: 'invitations.pdf',
-        size: 0,
-      }],
-      target_format: 'pdf',
-      credit_cost: 1,
+const getJobsResponse = () => {
+  const data = randomRange(1, 50).map(generateCheckImportResponse());
+  return {
+    data,
+    paging: {
+      total_count: _size(data),
+      first: _first(data).id,
+      last: _last(data).id,
+      limit: 50,
     },
-    {
-      id: 3,
-      key: 'GiVUYsF4A8ssq93FR48H',
-      status: 'initialising',
-      sandbox: false,
-      created_at: '2013-10-27T13:41:00Z',
-      finished_at: null,
-      source_file: {
-        id: 2,
-        name: 'guest_list.xls',
-        size: 7392,
-      },
-      target_files: [],
-      target_format: 'xlsx',
-      credit_cost: 1,
-    },
-    {
-      id: 1,
-      key: 'GiVUYsF4A8ssq93FR48H',
-      status: 'cancelled',
-      sandbox: false,
-      created_at: '2013-10-27T13:41:00Z',
-      finished_at: null,
-      source_file: {
-        id: 1,
-        name: 'budget.xls',
-        size: 16519,
-      },
-      target_files: [],
-      target_format: 'xlsx',
-      credit_cost: 1,
-    },
-  ],
-  paging: {
-    total_count: 3,
-    first: 18,
-    last: 1,
-    limit: 50,
-  },
+  };
 };
 export function getJobs() {
-  return FAKE(getJobsResponse);
+  return FAKE(getJobsResponse());
 }

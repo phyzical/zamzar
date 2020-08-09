@@ -1,30 +1,11 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import arrow from '../../assets/images/arrow-1.svg';
 import UploadComponent from '../common/UploadComponent';
 
 class Home extends Component {
   render() {
-    const { outputFormats, inputFormats, currentQueue } = this.props;
-
-    const inputOptions = inputFormats.map((inputFormat, i) => (
-      <p
-        key={`input-${i}`}
-      >
-        {inputFormat}
-
-      </p>
-    ));
-
-    const outputOptions = outputFormats.map((outputFormat, i) => (
-      <p
-        key={`output-${i}`}
-      >
-        {outputFormat}
-
-      </p>
-    ));
+    const { currentQueue } = this.props;
 
     const currentQueueList = currentQueue.map((item, i) => (
       <div
@@ -47,7 +28,7 @@ class Home extends Component {
 }
 
 Home.propTypes = {
-  currentQueue: PropTypes.array,
+  currentQueue: PropTypes.arrayOf(PropTypes.shape({})),
   dispatch: PropTypes.func.isRequired,
 };
 Home.defaultProps = {

@@ -57,12 +57,7 @@ function request(method, url, body) {
     performFetch(url, method, body)
       .then((resp) => handleResponse(url, resp, resolve, reject)).catch((
         error
-      ) => reject({
-        status: 500,
-        body: {
-          message: error,
-        },
-      }));
+      ) => reject(RequestError(error, 500)));
   });
 }
 

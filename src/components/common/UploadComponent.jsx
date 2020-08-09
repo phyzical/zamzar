@@ -1,6 +1,9 @@
 import React, {
   Component,
 } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import arrow from '../../assets/images/arrow-1.svg';
 
 class UploadComponent extends Component {
   componentDidMount() {
@@ -8,6 +11,28 @@ class UploadComponent extends Component {
   }
 
   render() {
+    const {
+      inputFormats,
+      outputFormats,
+    } = this.props;
+
+    const inputOptions = inputFormats.map((inputFormat, i) => (
+      <p
+        key={`input-${i}`}
+      >
+        {inputFormat}
+
+      </p>
+    ));
+
+    const outputOptions = outputFormats.map((outputFormat, i) => (
+      <p
+        key={`output-${i}`}
+      >
+        {outputFormat}
+
+      </p>
+    ));
     return (
       <div
         className="uk-flex uk-child-width-1-3"
@@ -22,6 +47,7 @@ class UploadComponent extends Component {
         <div className="arrow">
           <img
             data-src={arrow}
+            alt="arrow"
             width=""
             height=""
             uk-svg=""
@@ -39,9 +65,9 @@ class UploadComponent extends Component {
 }
 
 UploadComponent.propTypes = {
-  selectedInput: PropTypes.string.isRequired,
-  inputFormats: PropTypes.array,
-  outputFormats: PropTypes.shape({}),
+  selectedInput: PropTypes.string,
+  inputFormats: PropTypes.arrayOf(PropTypes.string),
+  outputFormats: PropTypes.arrayOf(PropTypes.shape({})),
   dispatch: PropTypes.func.isRequired,
 };
 UploadComponent.defaultProps = {

@@ -2,11 +2,15 @@ import React, { Component } from 'react';
 import { appVersion } from '../../helpers/config';
 
 class Footer extends Component {
-  currentYear() {
-    return new Date().getFullYear();
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentYear: new Date().getFullYear(),
+    };
   }
 
   render() {
+    const { currentYear } = this.state;
     return (
       <footer className="footer uk-padding-small">
         <div className="uk-container uk-container-expand uk-flex uk-flex-center">
@@ -16,7 +20,7 @@ class Footer extends Component {
             >
               &copy;
               {' '}
-              {this.currentYear()}
+              {currentYear}
               {' '}
               Jack Carpenter
             </li>

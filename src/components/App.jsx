@@ -10,11 +10,11 @@ import PropTypes from 'prop-types';
 import {
   connect,
 } from 'react-redux';
-import Home from './pages/Home.jsx';
-import History from './pages/History.jsx';
-import Settings from './pages/Settings.jsx';
-import Header from './common/Header.jsx';
-import Footer from './common/Footer.jsx';
+import Home from './pages/Home';
+import History from './pages/History';
+import Settings from './pages/Settings';
+import Header from './common/Header';
+import Footer from './common/Footer';
 
 class App extends Component {
   constructor(props) {
@@ -23,8 +23,9 @@ class App extends Component {
   }
 
   onBodyClick() {
-    if (this.props.menuOpen) {
-      this.props.dispatch({
+    const { menuOpen, dispatch } = this.props;
+    if (menuOpen) {
+      dispatch({
         type: 'APP/HIDE_MENU',
       });
     }
@@ -38,6 +39,9 @@ class App extends Component {
           onClick={
             this.onBodyClick
           }
+          tabIndex={0}
+          role="button"
+          onKeyDown={this.onBodyClick}
         >
           <Header />
           <div className="main uk-container">
