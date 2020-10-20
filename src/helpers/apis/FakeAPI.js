@@ -40,7 +40,7 @@ const accountResponse = {
   },
 };
 
-export function getAccount() {
+function getAccount() {
   return FAKE(accountResponse);
 }
 // formats
@@ -70,7 +70,8 @@ const getFormatResponse = (format) => {
     targets,
   };
 };
-export function getFormat(format) {
+
+function getFormat(format) {
   return FAKE(getFormatResponse(format));
 }
 const getFormatsResponse = () => {
@@ -97,7 +98,7 @@ const getFormatsResponse = () => {
   };
 };
 
-export function getFormats() {
+function getFormats() {
   return FAKE(getFormatsResponse());
 }
 // files
@@ -117,13 +118,13 @@ const generateFileResponse = (jobID, fileName) => {
 
 const uploadFileResponse = (fileName) => generateFileResponse(null, fileName);
 
-export function uploadFile(fileName) {
+function uploadFile(fileName) {
   return FAKE(uploadFileResponse(fileName));
 }
 
 const checkFileResponse = (jobID) => generateFileResponse(jobID);
 
-export function checkFile(jobID) {
+function checkFile(jobID) {
   return FAKE(checkFileResponse(jobID));
 }
 
@@ -140,19 +141,21 @@ const checkFilesResponse = () => {
     },
   };
 };
-export function checkFiles() {
+
+function checkFiles() {
   return FAKE(checkFilesResponse());
 }
 
 // todo get a sample payload
 const getFileResponse = {};
-export function getFile(jobID) {
+
+function getFile(jobID) {
   return FAKE(getFileResponse);
 }
 
 const deleteFileResponse = (jobID) => generateFileResponse(jobID);
 
-export function deleteFile(jobID) {
+function deleteFile(jobID) {
   return FAKE(deleteFileResponse(jobID));
 }
 
@@ -166,7 +169,7 @@ const importFileResponse = (fileURL) => ({
   finished_at: null,
 });
 
-export function importFile(fileURL) {
+function importFile(fileURL) {
   return FAKE(importFileResponse(fileURL));
 }
 
@@ -194,7 +197,7 @@ const generateCheckImportResponse = (importID) => {
 
 const checkImportResponse = (importID) => generateCheckImportResponse(importID);
 
-export function checkImport(importID) {
+function checkImport(importID) {
   return FAKE(checkImportResponse(importID));
 }
 const checkImportsResponse = () => {
@@ -211,7 +214,7 @@ const checkImportsResponse = () => {
   };
 };
 
-export function checkImports() {
+function checkImports() {
   return FAKE(checkImportsResponse());
 }
 // jobs
@@ -230,7 +233,8 @@ const createJobResponse = (sourceFile, targetFormat) => ({
   target_format: targetFormat,
   credit_cost: _random(1, 3),
 });
-export function createJob(sourceFile, targetFormat) {
+
+function createJob(sourceFile, targetFormat) {
   return FAKE(createJobResponse(sourceFile, targetFormat));
 }
 
@@ -263,7 +267,8 @@ const generateJobResponse = (jobID) => {
 };
 
 const getJobResponse = (jobID) => generateJobResponse(jobID);
-export function getJob(jobID) {
+
+function getJob(jobID) {
   return FAKE(getJobResponse(jobID));
 }
 const cancelJobResponse = (jobID) => {
@@ -272,7 +277,8 @@ const cancelJobResponse = (jobID) => {
   result.target_files = [];
   return result;
 };
-export function cancelJob(jobID) {
+
+function cancelJob(jobID) {
   return FAKE(cancelJobResponse(jobID));
 }
 const getJobsResponse = () => {
@@ -288,6 +294,25 @@ const getJobsResponse = () => {
     },
   };
 };
-export function getJobs() {
+
+function getJobs() {
   return FAKE(getJobsResponse());
 }
+
+export default {
+  getJobs,
+  cancelJob,
+  getJob,
+  createJob,
+  checkImports,
+  checkImport,
+  importFile,
+  deleteFile,
+  checkFiles,
+  getFormat,
+  getFormats,
+  getFile,
+  getAccount,
+  checkFile,
+  uploadFile,
+};

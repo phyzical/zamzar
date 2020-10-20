@@ -15,9 +15,10 @@ export function getAccount() {
     type: '',
   });
   return new Promise((resolve) => {
-    getAPI.getAccount().then((data) => {
-      resolve();
-    });
+    getAPI.getAccount()
+      .then((data) => {
+        resolve();
+      });
   });
 }
 

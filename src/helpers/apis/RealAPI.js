@@ -1,5 +1,5 @@
 import camelcaseKeys from 'camelcase-keys';
-import fetch from 'fetch';
+import fetch from 'electron-fetch';
 import {
   log,
 } from '../helpers';
@@ -65,7 +65,7 @@ function request(method, url, body) {
 }
 
 // eslint-disable-next-line
-export function GET(url, params) {
+function GET(url, params) {
   let finalURL = url;
   let finalParams = params;
   if (finalParams) {
@@ -78,22 +78,22 @@ export function GET(url, params) {
   return request('GET', finalURL, null);
 }
 // eslint-disable-next-line
-export function POST(url, body) {
+function POST(url, body) {
   return request('POST', url, body);
 }
 
 // eslint-disable-next-line
-export function PATCH(url, body) {
+function PATCH(url, body) {
   return request('PATCH', url, body);
 }
 
 // eslint-disable-next-line
-export function PUT(url, body) {
+function PUT(url, body) {
   return request('PUT', url, body);
 }
 
 // eslint-disable-next-line
-export function DELETE(url, body) {
+function DELETE(url, body) {
   return request('DELETE', url, body);
 }
 
@@ -104,82 +104,101 @@ const apiV1URL = [zamzarURL, 'v1'].join('/');
 // Accounts
 const accountURL = [apiV1URL, 'account'].join('/');
 
-export function getAccount() {
+function getAccount() {
   return GET(accountURL);
 }
 
 // Formats
 const formatsURL = [apiV1URL, 'formats'].join('/');
 
-export function getFormat(format) {
+function getFormat(format) {
   return GET([formatsURL, format].join('/'));
 }
 
-export function getAllFormats() {
+function getFormats() {
   return GET(formatsURL);
 }
 
 // Files
 const filesURL = [apiV1URL, 'files'].join('/');
 
-export function uploadFile(fileName, fileData) {
+function uploadFile(fileName, fileData) {
   return POST(filesURL, {
     name: fileName,
     content: fileData,
   });
 }
 
-export function checkFile(jobID) {
+function checkFile(jobID) {
   return GET([filesURL, jobID].join('/'));
 }
 
-export function checkFiles(jobID) {
+function checkFiles(jobID) {
   return GET([filesURL, jobID].join('/'));
 }
 
-export function getFile(jobID) {
+function getFile(jobID) {
   return GET([filesURL, jobID, 'content'].join('/'));
 }
 
-export function deleteFile(jobID) {
+function deleteFile(jobID) {
   return DELETE([filesURL, jobID].join('/'));
 }
 
 // imports
 const importsURL = [apiV1URL, 'imports'].join('/');
-export function importFile(fileURL, fileName = null) {
+
+function importFile(fileURL, fileName = null) {
   return POST(importsURL, {
     url: fileURL,
     filename: fileName,
   });
 }
 
-export function checkImport(importID) {
+function checkImport(importID) {
   return GET([importsURL, importID].join('/'));
 }
 
-export function checkImports() {
+function checkImports() {
   return GET(importsURL);
 }
 
 // jobs
 const jobsURL = [apiV1URL, 'jobs'].join('/');
 
-export function createJob(sourceFile, targetFormat) {
+function createJob(sourceFile, targetFormat) {
   return POST(jobsURL, {
     source_file: sourceFile,
     target_format: targetFormat,
   });
 }
 
-export function getJob(jobID) {
+function getJob(jobID) {
   return GET([jobsURL, jobID].join('/'));
 }
 
-export function getJobs() {
+function getJobs() {
   return GET(jobsURL);
 }
 
-export function cancelJob(jobID) {
+function cancelJob(jobID) {
   return DELETE([jobsURL, jobID].join('/'));
 }
+
+export default {
+  getJobs,
+  cancelJob,
+  getJob,
+  createJob,
+  checkImports,
+  checkImport,
+  importFile,
+  deleteFile,
+  checkFiles,
+  getFormat,
+  getFormats,
+  getFile,
+  getAccount,
+  checkFile,
+  uploadFile,
+};
