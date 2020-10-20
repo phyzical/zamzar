@@ -52,24 +52,19 @@ class App extends Component {
                 Home
               }
             />
-            {' '}
             <Route
               path="/history"
               component={
                 History
               }
             />
-            {' '}
             <Route
               path="/settings"
               component={
                 Settings
               }
             />
-            {' '}
-
           </div>
-          {' '}
           <Footer />
         </div>
       </HashRouter>

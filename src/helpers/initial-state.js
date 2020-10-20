@@ -1,25 +1,22 @@
-const inputs = [
-  'doc',
-  'epub',
-  'pdf',
-  'csv',
-];
 const initialState = {
   app: {
     menuOpen: false,
   },
   home: {
-    selectedInput: 'doc',
-    inputs,
-    outputs: inputs.reduce((acc, input) => {
-      acc[input] = {
-        outputs: [],
-      };
-      return acc;
-    }, {}),
+    selectedInput: null,
+    inputs: [],
+    outputs: [],
   },
   settings: {
-    account: {},
+    apiKey: null,
+    testCredits: 0,
+    credits: 0,
+    plan: {
+      name: '',
+      price: 0,
+      conversions: 0,
+      maxFileSize: 0,
+    },
   },
   history: {
     items: [],

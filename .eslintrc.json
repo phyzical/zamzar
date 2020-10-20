@@ -17,9 +17,11 @@
     "linebreak-style": "off",
     "indent": "off",
     "react/prefer-stateless-function": "off",
-    "react/no-array-index-key": "off",
     "operator-linebreak": "off",
     "import/prefer-default-export": "off",
+    "react/jsx-filename-extension": [1, {
+      "extensions": [".js", ".jsx"]
+    }],
     "newline-per-chained-call": ["error", {
       "ignoreChainWithDepth": 1
     }]

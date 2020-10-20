@@ -6,33 +6,29 @@ import { connect } from 'react-redux';
 import arrow from '../../assets/images/arrow-1.svg';
 
 class UploadComponent extends Component {
-  componentDidMount() {
-
-  }
-
   render() {
     const {
-      inputFormats,
-      outputFormats,
+      selectedInput,
+      inputs,
+      outputs,
     } = this.props;
 
-    const inputOptions = inputFormats.map((inputFormat, i) => (
+    const inputOptions = inputs.map((inputFormat) => (
       <p
-        key={`input-${i}`}
+        key={`input-${inputFormat}`}
       >
         {inputFormat}
 
       </p>
     ));
-
-    const outputOptions = outputFormats.map((outputFormat, i) => (
+    const selectedOutput = outputs.find((output) => output.name === selectedInput);
+    const outputOptions = selectedOutput ? selectedOutput.targets.map(({ name }) => (
       <p
-        key={`output-${i}`}
+        key={`output-${name}`}
       >
-        {outputFormat}
-
+        {name}
       </p>
-    ));
+    )) : null;
     return (
       <div
         className="uk-flex uk-child-width-1-3"
@@ -66,24 +62,22 @@ class UploadComponent extends Component {
 
 UploadComponent.propTypes = {
   selectedInput: PropTypes.string,
-  inputFormats: PropTypes.arrayOf(PropTypes.string),
-  outputFormats: PropTypes.arrayOf(PropTypes.shape({})),
+  inputs: PropTypes.arrayOf(PropTypes.string),
+  outputs: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    targets: PropTypes.arrayOf(PropTypes.shape({
+      name: PropTypes.string,
+      cost: PropTypes.number,
+    })),
+  })),
   dispatch: PropTypes.func.isRequired,
 };
 UploadComponent.defaultProps = {
-  outputFormats: {
-    in1: {
-      outputs: ['out1', 'out2'],
-    },
-    in2: {
-      outputs: ['out3', 'out4'],
-    },
-  },
-  selectedInput: 'in1',
-  inputFormats: ['in1', 'in2'],
+  selectedInput: null,
+  inputs: [],
+  outputs: [],
 };
 export default connect((state) => ({
-  // selectedInput: state.home.selectedInput,
-  // inputFormats: state.home.inputs,
-  // outputFormats: state.home.outputs
+  // inputs: state.home.inputs,
+  // outputs: state.home.outputs
 }))(UploadComponent);

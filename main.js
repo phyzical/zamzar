@@ -1,12 +1,18 @@
 /* eslint-disable import/no-extraneous-dependencies */
 // Import parts of electron to use
+
 const {
   app,
   BrowserWindow,
 } = require('electron');
 const path = require('path');
 const url = require('url');
-const config = require('./src/helpers/config');
+const {
+  log,
+} = require('./src/helpers/helpers');
+const {
+  isDev,
+} = require('./src/helpers/config');
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -33,7 +39,7 @@ function createWindow() {
   // and load the index.html of the app.
   let indexPath;
 
-  if (config.isDev && process.argv.indexOf('--noDevServer') === -1) {
+  if (isDev && process.argv.indexOf('--noDevServer') === -1) {
     indexPath = url.format({
       protocol: 'http:',
       host: 'localhost:8080',
@@ -55,7 +61,7 @@ function createWindow() {
     mainWindow.show();
 
     // Open the DevTools automatically if developing
-    if (config.isDev) {
+    if (isDev) {
       const {
         default: installExtension,
         REACT_DEVELOPER_TOOLS,
@@ -63,7 +69,7 @@ function createWindow() {
       } = require('electron-devtools-installer');
 
       installExtension(REACT_DEVELOPER_TOOLS)
-        .catch((err) => console.log('Error loading React DevTools: ', err));
+        .catch((err) => log('Error loading React DevTools: ', err));
       mainWindow.webContents.openDevTools();
     }
   });

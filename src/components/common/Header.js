@@ -13,7 +13,8 @@ class Header extends Component {
 
   showMenu() {
     const { dispatch } = this.props;
-    uikit.offcanvas('#offcanvas-slide').show();
+    uikit.offcanvas('#offcanvas-slide')
+      .show();
     dispatch({
       type: 'APP/SHOW_MENU',
     });
@@ -21,7 +22,8 @@ class Header extends Component {
 
   hideMenu() {
     const { dispatch } = this.props;
-    uikit.offcanvas('#offcanvas-slide').hide();
+    uikit.offcanvas('#offcanvas-slide')
+      .hide();
     dispatch({
       type: 'APP/HIDE_MENU',
     });

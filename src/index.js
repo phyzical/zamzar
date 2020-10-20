@@ -7,7 +7,7 @@ import {
 import React from 'react';
 import uikit from 'uikit';
 import App from './components/App';
-import store from './helpers/store';
+import { getStore } from './helpers/store';
 
 uikit.use(require('uikit/dist/js/uikit-icons'));
 
@@ -18,7 +18,7 @@ document.body.appendChild(root);
 
 // Now we can render our application into it
 render((
-  <Provider store={store}>
+  <Provider store={getStore()}>
     <App />
   </Provider>),
   document.getElementById('root'));

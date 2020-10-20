@@ -1,8 +1,22 @@
-import config from './config';
+const {
+  isDev,
+} = require('./config');
 
-export function log(...values) {
-  if (config.isDev) {
+const log = (...values) => {
+  if (isDev) {
     // eslint-disable-next-line no-console
     console.log(values);
   }
-}
+};
+
+const error = (...values) => {
+  if (isDev) {
+    // eslint-disable-next-line no-console
+    console.error(values);
+  }
+};
+
+module.exports = {
+  log,
+  error,
+};

@@ -5,7 +5,8 @@ class Footer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentYear: new Date().getFullYear(),
+      currentYear: new Date()
+        .getFullYear(),
     };
   }
 
