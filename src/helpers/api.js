@@ -27,8 +27,30 @@ export function getFormat(format) {
   return getAPI.getFormat(format);
 }
 
-export function getAllFormats() {
-  return getAPI.getAllFormats();
+export function getFormats() {
+  const dispatch = getDispatch();
+  dispatch({
+    type: 'API_FORMATS/FETCHING',
+  });
+  getAPI.getFormats()
+    .then((data) => {
+      dispatch({
+        type: 'API_FORMATS/FETCHING_DONE',
+        status: 200,
+      });
+
+      dispatch({
+        type: 'HOME/SET_SELECTIONS',
+        data: data.body.data,
+      });
+    })
+    .catch((e) => {
+      dispatch({
+        type: 'API_FORMATS/FETCHING_FAILURE',
+        status: e.status,
+        message: e.body.message,
+      });
+    });
 }
 
 // Files

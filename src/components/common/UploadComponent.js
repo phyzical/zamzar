@@ -6,19 +6,35 @@ import { connect } from 'react-redux';
 import arrow from '../../assets/images/arrow-1.svg';
 
 class UploadComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedInput: null,
+    };
+  }
+
+  selectInput(val) {
+    this.setState({
+      selectedInput: val,
+    });
+  }
+
   render() {
     const {
-      selectedInput,
       inputs,
       outputs,
     } = this.props;
 
+    const {
+      selectedInput,
+    } = this.state;
+
     const inputOptions = inputs.map((inputFormat) => (
       <p
         key={`input-${inputFormat}`}
+        onClick={() => this.selectInput(inputFormat)}
       >
         {inputFormat}
-
       </p>
     ));
     const selectedOutput = outputs.find((output) => output.name === selectedInput);
@@ -29,13 +45,14 @@ class UploadComponent extends Component {
         {name}
       </p>
     )) : null;
+
     return (
       <div
         className="uk-flex uk-child-width-1-3"
         uk-grid=""
       >
         <div className="uk-inline">
-          <button className="uk-button uk-button-default" type="button">Input Format</button>
+          <button className="uk-button uk-button-default" type="button">{selectedInput || 'Input Format'}</button>
           <div uk-dropdown="mode: click">
             {inputOptions}
           </div>
@@ -50,7 +67,7 @@ class UploadComponent extends Component {
           />
         </div>
         <div className="uk-inline">
-          <button className="uk-button uk-button-default" type="button">Output Format</button>
+          <button disabled={!selectedInput} className="uk-button uk-button-default" type="button">Output Format</button>
           <div uk-dropdown="mode: click">
             {outputOptions}
           </div>
@@ -61,7 +78,6 @@ class UploadComponent extends Component {
 }
 
 UploadComponent.propTypes = {
-  selectedInput: PropTypes.string,
   inputs: PropTypes.arrayOf(PropTypes.string),
   outputs: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
@@ -73,11 +89,10 @@ UploadComponent.propTypes = {
   dispatch: PropTypes.func.isRequired,
 };
 UploadComponent.defaultProps = {
-  selectedInput: null,
   inputs: [],
   outputs: [],
 };
 export default connect((state) => ({
-  // inputs: state.home.inputs,
-  // outputs: state.home.outputs
+  inputs: state.home.inputs,
+  outputs: state.home.outputs,
 }))(UploadComponent);

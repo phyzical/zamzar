@@ -2,8 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import UploadComponent from '../common/UploadComponent';
+import { getFormats } from '../../helpers/api';
 
 class Home extends Component {
+  componentDidMount() {
+    getFormats();
+  }
+
   render() {
     const { currentQueue } = this.props;
 

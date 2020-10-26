@@ -1,5 +1,5 @@
 import camelcaseKeys from 'camelcase-keys';
-import fetch from 'electron-fetch';
+import fetch from 'node-fetch';
 import {
   log,
 } from '../helpers';

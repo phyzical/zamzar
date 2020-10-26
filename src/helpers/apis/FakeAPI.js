@@ -7,9 +7,13 @@ import {
   size as _size,
 } from 'lodash';
 import camelcaseKeys from 'camelcase-keys';
+import {
+  log,
+} from '../helpers';
 
 async function FAKE(data, status = 200) {
   return new Promise((resolve) => {
+    log('before response', data);
     setTimeout(() => {
       resolve({
         status,
